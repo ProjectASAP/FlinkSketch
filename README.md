@@ -17,7 +17,7 @@ cd FlinkSketch
 mvn clean install
 ```
 
-### 2. Create a New Flink Project
+### 2. Create a New Java Project
 
 ```bash
 # Create a new directory for your project
@@ -29,9 +29,11 @@ cd my-flink-sketch-app
 mkdir -p src/main/java/com/mycompany/app
 ```
 
-### 3. Add Dependencies to pom.xml
+### 3. Create pom.xml
 
-Create a `pom.xml` file in your project root:
+Create a `pom.xml` file in your project root with the following content.
+
+**Note:** This includes both dependencies (`flinksketch-core` and `flinksketch-bench`) and the `exec-maven-plugin` configuration needed to run locally.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -59,6 +61,13 @@ Create a `pom.xml` file in your project root:
             <version>0.1</version>
         </dependency>
 
+        <!-- FlinkSketch Bench (for PrecomputedOutput, AggregationConfig, etc.) -->
+        <dependency>
+            <groupId>dev.projectasap</groupId>
+            <artifactId>flinksketch-bench</artifactId>
+            <version>0.1</version>
+        </dependency>
+
         <!-- Flink Dependencies -->
         <dependency>
             <groupId>org.apache.flink</groupId>
@@ -81,6 +90,20 @@ Create a `pom.xml` file in your project root:
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.6.2</version>
+                <configuration>
+                    <executable>java</executable>
+                    <classpathScope>test</classpathScope>
+                    <arguments>
+                        <argument>-classpath</argument>
+                        <classpath/>
+                        <argument>com.mycompany.app.QuickStart</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
@@ -88,9 +111,18 @@ Create a `pom.xml` file in your project root:
 
 ### 4. Write Your Flink Job
 
-Copy the code from [QuickStart.java](flinksketch-examples/src/main/java/dev/projectasap/flinksketch/examples/quickstart/QuickStart.java) to `src/main/java/com/mycompany/app/App.java`.
+Copy the example code from [QuickStart.java](flinksketch-examples/src/main/java/dev/projectasap/flinksketch/examples/quickstart/QuickStart.java) to your project at `src/main/java/com/mycompany/app/QuickStart.java`.
 
-**Key operations:**
+```bash
+# From your project directory (my-flink-sketch-app)
+cp ../FlinkSketch/flinksketch-examples/src/main/java/dev/projectasap/flinksketch/examples/quickstart/QuickStart.java \
+   ./src/main/java/com/mycompany/app/QuickStart.java
+```
+
+**After copying, make this change:**
+- Change the package from `package dev.projectasap.flinksketch.examples.quickstart;` to `package com.mycompany.app;`
+
+**Key operations in QuickStart.java:**
 
 Ingestion:
 ```java
@@ -118,8 +150,8 @@ JsonNode frequency = result.precompute.query(queryParams);
 # Compile your project
 mvn clean compile
 
-# Run your application
-mvn exec:java -Dexec.mainClass="com.mycompany.app.App"
+# Run your application - use grep to avoid flink output
+mvn exec:exec | grep apple
 ```
 
 For more sketch types (quantiles, cardinality, top-K) and advanced usage, see the Usage Examples section below.
