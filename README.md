@@ -17,7 +17,7 @@ cd FlinkSketch
 mvn clean install
 ```
 
-### 2. Create a New Flink Project
+### 2. Create a New Java Project
 
 ```bash
 # Create a new directory for your project
@@ -100,7 +100,7 @@ Create a `pom.xml` file in your project root with the following content.
                     <arguments>
                         <argument>-classpath</argument>
                         <classpath/>
-                        <argument>com.mycompany.app.App</argument>
+                        <argument>com.mycompany.app.QuickStart</argument>
                     </arguments>
                 </configuration>
             </plugin>
@@ -111,24 +111,18 @@ Create a `pom.xml` file in your project root with the following content.
 
 ### 4. Write Your Flink Job
 
-Copy the example code to your project.
-
-**Option 1: Using command line**
+Copy the example code from [QuickStart.java](flinksketch-examples/src/main/java/dev/projectasap/flinksketch/examples/quickstart/QuickStart.java) to your project at `src/main/java/com/mycompany/app/QuickStart.java`.
 
 ```bash
 # From the parent directory containing both FlinkSketch and my-flink-sketch-app
-cp FlinkSketch/flinksketch-examples/src/main/java/dev/projectasap/flinksketch/examples/quickstart/QuickStart.java \
-   my-flink-sketch-app/src/main/java/com/mycompany/app/QuickStart.java
+cp ../FlinkSketch/flinksketch-examples/src/main/java/dev/projectasap/flinksketch/examples/quickstart/QuickStart.java \
+   ./src/main/java/com/mycompany/app/QuickStart.java
 ```
 
-**Option 2: Manual copy**
-
-Copy the code from [QuickStart.java](flinksketch-examples/src/main/java/dev/projectasap/flinksketch/examples/quickstart/QuickStart.java) to `src/main/java/com/mycompany/app/App.java`.
-
-**⚠️ Important: After copying, make this change:**
+**After copying, make this change:**
 - Change the package from `package dev.projectasap.flinksketch.examples.quickstart;` to `package com.mycompany.app;`
 
-**Key operations:**
+**Key operations in QuickStart.java:**
 
 Ingestion:
 ```java
