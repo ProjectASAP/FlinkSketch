@@ -111,9 +111,22 @@ Create a `pom.xml` file in your project root with the following content.
 
 ### 4. Write Your Flink Job
 
-Copy the code from [QuickStart.java](flinksketch-examples/src/main/java/dev/projectasap/flinksketch/examples/quickstart/QuickStart.java) to `src/main/java/com/mycompany/app/App.java`, and make these changes:
+Copy the example code to your project.
+
+**Option 1: Using command line**
+
+```bash
+# From the parent directory containing both FlinkSketch and my-flink-sketch-app
+cp FlinkSketch/flinksketch-examples/src/main/java/dev/projectasap/flinksketch/examples/quickstart/QuickStart.java \
+   my-flink-sketch-app/src/main/java/com/mycompany/app/QuickStart.java
+```
+
+**Option 2: Manual copy**
+
+Copy the code from [QuickStart.java](flinksketch-examples/src/main/java/dev/projectasap/flinksketch/examples/quickstart/QuickStart.java) to `src/main/java/com/mycompany/app/App.java`.
+
+**⚠️ Important: After copying, make this change:**
 - Change the package from `package dev.projectasap.flinksketch.examples.quickstart;` to `package com.mycompany.app;`
-- Rename the class from `public class QuickStart` to `public class App`
 
 **Key operations:**
 
