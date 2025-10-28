@@ -59,6 +59,13 @@ Create a `pom.xml` file in your project root:
             <version>0.1</version>
         </dependency>
 
+        <!-- FlinkSketch Bench (for PrecomputedOutput, AggregationConfig, etc.) -->
+        <dependency>
+            <groupId>dev.projectasap</groupId>
+            <artifactId>flinksketch-bench</artifactId>
+            <version>0.1</version>
+        </dependency>
+
         <!-- Flink Dependencies -->
         <dependency>
             <groupId>org.apache.flink</groupId>
@@ -88,7 +95,9 @@ Create a `pom.xml` file in your project root:
 
 ### 4. Write Your Flink Job
 
-Copy the code from [QuickStart.java](flinksketch-examples/src/main/java/dev/projectasap/flinksketch/examples/quickstart/QuickStart.java) to `src/main/java/com/mycompany/app/App.java`.
+Copy the code from [QuickStart.java](flinksketch-examples/src/main/java/dev/projectasap/flinksketch/examples/quickstart/QuickStart.java) to `src/main/java/com/mycompany/app/App.java`, and make these changes:
+- Change the package from `package dev.projectasap.flinksketch.examples.quickstart;` to `package com.mycompany.app;`
+- Rename the class from `public class QuickStart` to `public class App`
 
 **Key operations:**
 
