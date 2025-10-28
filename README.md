@@ -114,7 +114,7 @@ Create a `pom.xml` file in your project root with the following content.
 Copy the example code from [QuickStart.java](flinksketch-examples/src/main/java/dev/projectasap/flinksketch/examples/quickstart/QuickStart.java) to your project at `src/main/java/com/mycompany/app/QuickStart.java`.
 
 ```bash
-# From the parent directory containing both FlinkSketch and my-flink-sketch-app
+# From your project directory (my-flink-sketch-app)
 cp ../FlinkSketch/flinksketch-examples/src/main/java/dev/projectasap/flinksketch/examples/quickstart/QuickStart.java \
    ./src/main/java/com/mycompany/app/QuickStart.java
 ```
