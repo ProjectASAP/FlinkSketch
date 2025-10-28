@@ -1,4 +1,4 @@
-# FlinkSketch: Democratizing the Benefits of Sketches for the Flink Community
+<h1 align="center">FlinkSketch: Democratizing the Benefits of Sketches for the Flink Community</h1>
 
 ## Overview
 FlinkSketch is a library of sketching algorithms for Flink. Currently, it can be used in Flink's DataStream API.
