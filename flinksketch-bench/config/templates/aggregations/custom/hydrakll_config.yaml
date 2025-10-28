@@ -1,0 +1,15 @@
+#
+# Copyright 2025 ProjectASAP contributors
+# SPDX-License-Identifier: Apache-2.0
+#
+
+aggregations:
+  - aggregationId: 1
+    aggregationSubType:
+    aggregationType: HydraKLL
+    aggregationPackage: custom
+    parameters:
+      rows: 3
+      cols: 2048
+      k: 200
+    tumblingWindowSize: 10

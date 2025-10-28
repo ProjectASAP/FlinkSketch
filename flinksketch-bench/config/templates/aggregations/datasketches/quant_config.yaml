@@ -1,0 +1,13 @@
+#
+# Copyright 2025 ProjectASAP contributors
+# SPDX-License-Identifier: Apache-2.0
+#
+
+aggregations:
+  - aggregationId: 1
+    aggregationSubType:
+    aggregationType: DataSketchKllFloatsSketch
+    aggregationPackage: datasketches
+    parameters:
+      k: 300
+    tumblingWindowSize: 10

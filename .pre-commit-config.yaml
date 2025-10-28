@@ -1,0 +1,49 @@
+repos:
+  # Common pre-commit hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: check-merge-conflict
+
+  # Python formatting and linting
+  - repo: https://github.com/psf/black
+    rev: 24.8.0
+    hooks:
+      - id: black
+        language_version: python3
+        files: ^flinksketch-bench/benchmarks/
+
+  - repo: https://github.com/pycqa/flake8
+    rev: 6.0.0
+    hooks:
+      - id: flake8
+        files: ^flinksketch-bench/benchmarks/
+        args: ['--config=flinksketch-bench/benchmarks/experiments/.flake8']
+
+  # Java/Maven hooks
+  - repo: local
+    hooks:
+      - id: spotless-apply
+        name: Spotless Auto-format
+        entry: mvn spotless:apply
+        language: system
+        pass_filenames: false
+        files: \.java$
+
+      - id: maven-build
+        name: Maven Build
+        entry: mvn clean install -DskipTests
+        language: system
+        pass_filenames: false
+        files: \.(java|xml)$
+
+      - id: maven-test
+        name: Maven Test
+        entry: mvn test
+        language: system
+        pass_filenames: false
+        files: \.java$

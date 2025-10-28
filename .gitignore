@@ -1,0 +1,27 @@
+**/output/
+**/post_res/
+
+**/*.swp
+**/.DS_Store
+**/*.pyc
+**/__pycache__/
+.vscode/
+
+target/
+
+*.out
+
+.venv
+.python-version
+
+/flinksketch-bench/benchmarks/experiments/post/
+
+/flinksketch-bench/benchmarks/experiments/tests/output/
+
+/flinksketch-bench/benchmarks/experiments/tools/
+
+# Local configuration overrides (not committed)
+# Ignore everything in config/ except templates/
+flinksketch-bench/config/*
+!flinksketch-bench/config/templates/
+!flinksketch-bench/config/README.md

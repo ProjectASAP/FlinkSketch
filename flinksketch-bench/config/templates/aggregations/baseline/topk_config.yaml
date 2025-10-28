@@ -1,0 +1,13 @@
+#
+# Copyright 2025 ProjectASAP contributors
+# SPDX-License-Identifier: Apache-2.0
+#
+
+aggregations:
+  - aggregationId: 1
+    aggregationSubType: count
+    aggregationType: ExactTopK
+    aggregationPackage: baseline
+    parameters:
+      k: 10
+    tumblingWindowSize: 10

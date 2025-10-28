@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright 2025 ProjectASAP contributors
+    SPDX-License-Identifier: Apache-2.0
+
+-->
+<Configuration status="WARN">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="DEBUG">
+            <AppenderRef ref="Console" />
+        </Root>
+        <!-- You can add specific loggers for your package -->
+        <Logger name="dev.projectasap.flinksketch" level="DEBUG">
+            <AppenderRef ref="Console" />
+        </Logger>
+    </Loggers>
+</Configuration>

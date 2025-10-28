@@ -1,0 +1,18 @@
+[project]
+name = "infrastructure"
+version = "0.1.0"
+description = "Flink experiment infrastructure and analysis tools"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "requests>=2.32.5",
+    "pyyaml>=6.0",
+    "matplotlib>=3.10",
+    "numpy>=1.24.0",
+    "psutil>=5.9.0",
+    "tqdm>=4.65.0",
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py310']

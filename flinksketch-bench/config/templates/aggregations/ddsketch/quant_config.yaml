@@ -1,0 +1,15 @@
+#
+# Copyright 2025 ProjectASAP contributors
+# SPDX-License-Identifier: Apache-2.0
+#
+
+aggregations:
+  - aggregationId: 1
+    aggregationSubType:
+    aggregationType: DDSketchQuantile
+    aggregationPackage: ddsketch
+    parameters:
+      relativeAccuracy: 0.01  # Required: relative error guarantee (e.g., 0.01 = 1% error)
+      maxNumBins: 2048        # Required for bounded DDSketch: ~16KB memory per sketch (8 * maxNumBins bytes)
+      unbounded: false        # If true, maxNumBins is ignored
+    tumblingWindowSize: 10

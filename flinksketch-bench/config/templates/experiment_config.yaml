@@ -1,0 +1,80 @@
+#
+# Copyright 2025 ProjectASAP contributors
+# SPDX-License-Identifier: Apache-2.0
+#
+
+# Experiment Configuration Template
+experiments:
+  resource:
+    # Resource parameter to vary: 'cpu' | 'memory'
+    name: cpu
+    # Range of values to test: [min, max]
+    range: [1, 32]
+    # Step size for generating range values (2x, 3x, etc.)
+    step: 2
+
+  query:
+    # Query type: 'freq' | 'quantile' | 'perKeyQuantile' | 'cardinality' | 'topk' | 'entropy'
+    name: freq
+    baseline:
+      config_file_path: '<PROJECT_ROOT>/config/aggregations/baseline/<QUERY_TYPE>_config.yaml'
+    datasketches:
+      config_file_path: '<PROJECT_ROOT>/config/aggregations/datasketches/<QUERY_TYPE>_config.yaml'
+    custom:
+      # Optional: Path to custom config
+      config_file_path: '<PROJECT_ROOT>/config/aggregations/custom/<QUERY_TYPE>_config.yaml'
+    # List of query keys for frequency/item-based queries (e.g., ['user123', 'user456'])
+    keys: []
+    # List of query ranks for quantile queries (e.g., [0.5, 0.95, 0.99])
+    # Future: Can be used together with keys for per-key quantile queries
+    ranks: []
+
+# Flink Configuration
+flink:
+  jar_path: '<PROJECT_ROOT>/flinksketch-core/target/flinksketch-0.1-shaded.jar'
+  # Output format: 'json' | 'byte'
+  output_format: 'json'
+  # Enable verbose output to sink: true | false
+  verbose: true
+  # Pipeline type: 'insertion' | 'insertion_querying'
+  pipeline: 'insertion_querying'
+  # Output mode: 'sketch' | 'query' | 'memory' | 'query_memory' | 'sketch_query_memory'
+  # NOTE: 'query' only available for 'insertion_querying' pipeline
+  output_mode: 'query_memory'
+
+  # Default parallelism (overridden when resource.name is 'cpu')
+  parallelism: 1
+  # Enable merging of parallel window results: true | false
+  enable_merging: false
+
+  # DataGen source settings
+  datagen_key_cardinality: 10000
+  # Number of items to fit in each tumbling window
+  datagen_items_per_window: 1600000
+  # Distribution type for generated values: 'uniform' or 'normal'
+  distribution: 'normal'
+
+
+# Docker Container Configuration
+docker:
+  default_resources:
+    jobmanager:
+      cpu: 1.0
+      memory: '2g'
+    taskmanager:
+      cpu: 2.0
+      jvm_heap_memory: '64g'
+
+# Job Monitoring Configuration
+monitoring:
+  host: 'localhost'
+  port: 8081
+  interval: 10                   # Monitoring interval in seconds
+  timer: 5000                    # Timer duration in seconds
+  flink_bin: 'bin/flink'         # Path to Flink binary
+  log_file_name: 'job_monitor.json'
+  architecture: 'x86_64'         # System architecture: 'x86_64' | 'arm64'
+
+# Output Paths
+paths:
+  experiments_base:

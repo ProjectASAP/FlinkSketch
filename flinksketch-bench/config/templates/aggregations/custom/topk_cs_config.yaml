@@ -1,0 +1,16 @@
+#
+# Copyright 2025 ProjectASAP contributors
+# SPDX-License-Identifier: Apache-2.0
+#
+
+aggregations:
+  - aggregationId: 2
+    aggregationSubType: count
+    aggregationType: CountSketch
+    aggregationPackage: custom
+    parameters:
+      rows: 3
+      cols: 2048
+      trackHH: true # Must be true for top k
+      k: 10
+    tumblingWindowSize: 10

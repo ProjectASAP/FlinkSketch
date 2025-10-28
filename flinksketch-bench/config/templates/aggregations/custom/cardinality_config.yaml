@@ -1,0 +1,16 @@
+#
+# Copyright 2025 ProjectASAP contributors
+# SPDX-License-Identifier: Apache-2.0
+#
+
+aggregations:
+  - aggregationId: 3
+    aggregationSubType: count
+    aggregationType: Univmon
+    aggregationPackage: custom
+    parameters:
+      rows: 3
+      cols: 2048
+      k: 20
+      levels: 16
+    tumblingWindowSize: 10

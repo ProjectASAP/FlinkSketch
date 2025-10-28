@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  java-build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 11
+      uses: actions/setup-java@v4
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Check formatting with Spotless
+      run: mvn spotless:check -B
+
+    - name: Check license headers
+      run: mvn license:check -B
+
+    # NOTE: Checkstyle is commented out because it conflicts with Spotless formatting
+    # - name: Run Checkstyle
+    #   run: mvn checkstyle:check -B
+
+    - name: Build with Maven
+      run: mvn clean install -B -V
+
+    - name: Run tests
+      run: mvn clean test -B
+
+  python-lint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install black==24.8.0 flake8
+        cd flinksketch-bench/benchmarks/experiments
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    - name: Check formatting with Black
+      run: black --check --diff flinksketch-bench/benchmarks/
+
+    - name: Lint with flake8
+      run: |
+        # Stop the build if there are Python syntax errors or undefined names
+        flake8 flinksketch-bench/benchmarks/ --config=flinksketch-bench/benchmarks/experiments/.flake8 --count --select=E9,F63,F7,F82 --show-source --statistics
+        # Exit-zero treats all errors as warnings
+        flake8 flinksketch-bench/benchmarks/ --config=flinksketch-bench/benchmarks/experiments/.flake8 --count --exit-zero --max-complexity=10 --statistics

@@ -1,0 +1,12 @@
+#
+# Copyright 2025 ProjectASAP contributors
+# SPDX-License-Identifier: Apache-2.0
+#
+
+aggregations:
+  - aggregationId: 1
+    aggregationSubType: count
+    aggregationType: ExactFrequency
+    aggregationPackage: baseline
+    parameters: {}
+    tumblingWindowSize: 10
