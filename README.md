@@ -29,9 +29,11 @@ cd my-flink-sketch-app
 mkdir -p src/main/java/com/mycompany/app
 ```
 
-### 3. Add Dependencies to pom.xml
+### 3. Create pom.xml
 
-Create a `pom.xml` file in your project root:
+Create a `pom.xml` file in your project root with the following content.
+
+**Note:** This includes both dependencies (`flinksketch-core` and `flinksketch-bench`) and the `exec-maven-plugin` configuration needed to run locally.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -88,6 +90,20 @@ Create a `pom.xml` file in your project root:
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.6.2</version>
+                <configuration>
+                    <executable>java</executable>
+                    <classpathScope>test</classpathScope>
+                    <arguments>
+                        <argument>-classpath</argument>
+                        <classpath/>
+                        <argument>com.mycompany.app.App</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
@@ -127,8 +143,8 @@ JsonNode frequency = result.precompute.query(queryParams);
 # Compile your project
 mvn clean compile
 
-# Run your application
-mvn exec:java -Dexec.mainClass="com.mycompany.app.App"
+# Run your application - use grep to avoid flink output
+mvn exec:exec | grep apple
 ```
 
 For more sketch types (quantiles, cardinality, top-K) and advanced usage, see the Usage Examples section below.
