@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.Namespace;
+import org.apache.commons.math3.distribution.ZipfDistribution;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.AggregateFunction;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
@@ -136,9 +137,10 @@ public class DataStreamJob {
     parser
         .addArgument("--distribution")
         .type(String.class)
-        .choices("uniform", "normal")
+        .choices("uniform", "normal", "zipfian")
         .setDefault("uniform")
-        .help("Distribution type for generated values: uniform or normal (default: uniform)");
+        .help(
+            "Distribution type for generated values: uniform, normal, or zipfian (default: uniform)");
 
     Namespace parsedArgs = parser.parseArgsOrFail(args);
     return parsedArgs;
@@ -179,10 +181,19 @@ public class DataStreamJob {
       boolean infiniteCardinality,
       int keyCardinality,
       String distribution,
-      Random randomSource) {
+      Random randomSource,
+      ZipfDistribution zipf) {
     // Calculate timestamp so that N items fit into each tumbling window
     long timestamp = baseTimestamp + (index / itemsPerWindow) * millisecondTumblingWindow;
-    String key = infiniteCardinality ? "key" + index : "key" + ((index % keyCardinality) + 1);
+
+    String key;
+    if (infiniteCardinality) key = "key" + index;
+    else if ("zipfian".equals(distribution)) {
+      int zipfkey = zipf.sample();
+      key = "key" + zipfkey;
+    } else {
+      key = "key" + ((index % keyCardinality) + 1);
+    }
 
     // Generate value based on distribution type
     int value;
@@ -191,6 +202,8 @@ public class DataStreamJob {
       double normalValue = randomSource.nextGaussian() * 166667 + 500000;
       // Clamp to 1-1,000,000 range
       value = (int) Math.max(1, Math.min(1000000, normalValue));
+    } else if ("zipfian".equals(distribution)) {
+      value = 1;
     } else {
       // Uniform distribution (default): 1-1,000,000
       value = randomSource.nextInt(1000000) + 1;
@@ -215,6 +228,11 @@ public class DataStreamJob {
 
     // Create first source
     Random random0 = new Random(40L);
+
+    // exponent 1.07 is the YCSB (Yahoo! Cloud Serving Benchmark) benchmark
+    ZipfDistribution zipf =
+        "zipfian".equals(distribution) ? new ZipfDistribution(keyCardinality, 1.07) : null;
+
     GeneratorFunction<Long, DataPoint> baseGeneratorFunction =
         index ->
             generateDataPoint(
@@ -225,7 +243,8 @@ public class DataStreamJob {
                 infiniteCardinality,
                 keyCardinality,
                 distribution,
-                random0);
+                random0,
+                zipf);
 
     DataGeneratorSource<DataPoint> baseDataGenSource =
         new DataGeneratorSource<>(
@@ -238,6 +257,8 @@ public class DataStreamJob {
     for (int i = 1; i < numSources; i++) {
       final int sourceId = i;
       Random randomSource = new Random(40L + i);
+      ZipfDistribution zipfSource =
+          "zipfian".equals(distribution) ? new ZipfDistribution(keyCardinality, 1.07) : null;
       GeneratorFunction<Long, DataPoint> generatorFunction =
           index ->
               generateDataPoint(
@@ -248,7 +269,8 @@ public class DataStreamJob {
                   infiniteCardinality,
                   keyCardinality,
                   distribution,
-                  randomSource);
+                  randomSource,
+                  zipfSource);
 
       DataGeneratorSource<DataPoint> dataGenSource =
           new DataGeneratorSource<>(
